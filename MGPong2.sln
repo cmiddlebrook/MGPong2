@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MGPong2", "MGPong2.csproj", "{BF492486-EE6E-3D04-860E-3E8CF3BAC1AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CALIMOE", "..\CALIMOE\CALIMOE.csproj", "{201C39D2-BD3C-E96A-A5B8-9A52F37693E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BF492486-EE6E-3D04-860E-3E8CF3BAC1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF492486-EE6E-3D04-860E-3E8CF3BAC1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF492486-EE6E-3D04-860E-3E8CF3BAC1AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{201C39D2-BD3C-E96A-A5B8-9A52F37693E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{201C39D2-BD3C-E96A-A5B8-9A52F37693E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{201C39D2-BD3C-E96A-A5B8-9A52F37693E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{201C39D2-BD3C-E96A-A5B8-9A52F37693E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
