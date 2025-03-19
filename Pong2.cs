@@ -14,7 +14,7 @@ public class Pong2 : Calimoe
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         _showFPS = false;
-        _fallbackTextureSize = 32;
+        _fallbackTextureSize = 64;
     }
 
     //protected override void Initialize()
