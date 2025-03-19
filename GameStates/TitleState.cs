@@ -41,7 +41,6 @@ public class TitleState : GameState
     {
         MediaPlayer.Volume = 0.3f;
         MediaPlayer.Play(_titleMusic);
-        base.Enter();
     }
 
     public override void HandleInput(GameTime gt)

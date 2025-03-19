@@ -10,11 +10,10 @@ public class PlayState : GameState
 {
     private Rectangle _playArea;
     private Texture2D _board;
-    private Vector2 _boardPosition;
     private ScoreBar _scoreBar;
-    private Paddle _leftPaddle;
+    private PlayerPaddle _playerPaddle;
     public int WindowWidth => _playArea.Width;
-    public int WindowHeight => _playArea.Height;
+    public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
     public PlayState(StateManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
@@ -28,8 +27,12 @@ public class PlayState : GameState
         _board = _am.LoadTexture("Board3");
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
         _playArea = new Rectangle(0, _scoreBar.Height, _board.Width, _board.Height);
-        _boardPosition = new Vector2(0, _scoreBar.Height);
-        _leftPaddle = new Paddle(_playArea, _am.LoadTexture("LeftPaddle"), 4);
+        _playerPaddle = new PlayerPaddle(_playArea, _am.LoadTexture("LeftPaddle"));
+    }
+
+    public override void Enter()
+    {
+        StartNewGame();
     }
     public override void HandleInput(GameTime gt)
     {
@@ -42,19 +45,28 @@ public class PlayState : GameState
         {
             _sm.SwitchState("win");
         }
+        else
+        {
+            _playerPaddle.HandleInput(_ih, gt);
+        }
     }
 
     public override void Update(GameTime gt)
     {
         base.Update(gt);
-        _leftPaddle.Update(gt);
+        _playerPaddle.Update(gt);
         HandleInput(gt);
     }
 
     public override void Draw(SpriteBatch sb)
     {
         _scoreBar.Draw(sb, 0, 0);
-        sb.Draw(_board, _boardPosition, Color.White);
-        _leftPaddle.Draw(sb);
+        sb.Draw(_board, _playArea, Color.White);
+        _playerPaddle.Draw(sb);
+    }
+
+    private void StartNewGame()
+    {
+        _playerPaddle.Reset();
     }
 }
