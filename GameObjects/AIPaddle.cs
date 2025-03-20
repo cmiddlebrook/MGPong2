@@ -2,14 +2,23 @@
 using CALIMOE;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MGPong2;
 public class AIPaddle
 {
+    private enum PaddleState
+    {
+        MovingUp,
+        MovingDown,
+        Stopped
+    }
+
     private SpriteObject _sprite;
     private Rectangle _playArea;
     private Vector2 _startPosition;
     private float _speed = 150f;
+    private PaddleState _state = PaddleState.Stopped;
 
     public Rectangle Bounds => _sprite.Bounds;
 
@@ -25,17 +34,30 @@ public class AIPaddle
 
     public void Update(GameTime gt)
     {
-        //Point ballPos = ballBounds.Center;
-        //Point paddlePos = _paddle.Bounds.Center;
+        switch (_state)
+        {
+            case PaddleState.MovingUp:
+                {
+                    float newY = (float)(_sprite.Position.Y - _speed * gt.ElapsedGameTime.TotalSeconds);
+                    _sprite.Position = new Vector2(_sprite.Position.X, Math.Max(newY, _playArea.Top));
+                    _state = PaddleState.Stopped;
+                    break;
+                }
 
-        //if (ballPos.Y < paddlePos.Y)
-        //{
-        //    _paddle.MoveUp(gt, Speed);
-        //}
-        //else if (ballPos.Y > paddlePos.Y)
-        //{
-        //    _paddle.MoveDown(gt, Speed);
-        //}
+            case PaddleState.MovingDown:
+                {
+                    float newY = (float)(_sprite.Position.Y + _speed * gt.ElapsedGameTime.TotalSeconds);
+                    _sprite.Position = new Vector2(_sprite.Position.X, Math.Min(newY, _playArea.Bottom - _sprite.Bounds.Height));
+                    _state = PaddleState.Stopped;
+                    break;
+                }
+
+            case PaddleState.Stopped:
+            default:
+                {
+                    break;
+                }
+        }
     }
 
     public void Draw(SpriteBatch sb)
@@ -46,6 +68,20 @@ public class AIPaddle
     public void Reset()
     {
         _sprite.Reset();
+    }
+
+    public void TrackBall(Rectangle ballBounds)
+    {
+        Point ballPos = ballBounds.Center;
+        Point paddlePos = _sprite.Bounds.Center;
+        if (ballPos.Y < paddlePos.Y)
+        {
+            _state = PaddleState.MovingUp;
+        }
+        else if (ballPos.Y > paddlePos.Y)
+        {
+            _state = PaddleState.MovingDown;
+        }
     }
 
 }

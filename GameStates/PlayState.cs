@@ -68,8 +68,9 @@ public class PlayState : GameState
         HandleBallPlayerCollision();
         HandleBallAICollision();
         _playerPaddle.Update(gt);
-        _aiPaddle.Update(gt);
         _ball.Update(gt);
+        _aiPaddle.TrackBall(_ball.Bounds);
+        _aiPaddle.Update(gt);
         HandleInput(gt);
     }
 
