@@ -8,18 +8,18 @@ using System.Diagnostics;
 
 namespace MGPong2;
 
-public class TitleScene : GameState
+public class TitleScene : GameScene
 {
     private TextObject _titleText;
     private TextObject _instructions;
     private string _instructionsText;
     private Song _titleMusic;
 
-    public TitleScene(StateManager sm, AssetManager am, InputHelper ih) 
+    public TitleScene(SceneManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
     {
         _name = "title";
-        _clearColour = new Color(0x10, 0x10, 0x10);
+        _clearColour = new Color(36, 36, 36);
     }
 
     public override void LoadContent()
@@ -34,7 +34,7 @@ public class TitleScene : GameState
         _instructionsText += "\n                      S - Move paddle down";
         _instructionsText += "\n                      P - Pause the game";
         _instructionsText += "\n\n                     ESCAPE - Quit to title";
-        _instructionsText += "\n                  SPACEBAR - Start new game";
+        _instructionsText += "\n              SPACEBAR - New Game / Serve Ball";
     }
 
     public override void Enter()

@@ -13,7 +13,7 @@ public class Pong2 : Calimoe
     {
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _showFPS = false;
+        _showFPS = true;
         _fallbackTextureSize = 64;
     }
 
@@ -31,7 +31,6 @@ public class Pong2 : Calimoe
 
         _sm.AddState(playState);
         _sm.AddState(new TitleScene(_sm, _am, _ih));
-        _sm.AddState(new WinScene(_sm, _am, _ih));
         _sm.SwitchState("title");
 
         _graphics.PreferredBackBufferWidth = playState.WindowWidth;
@@ -54,10 +53,16 @@ public class Pong2 : Calimoe
 
     protected override void Draw(GameTime gt)
     {
-        base.Draw(gt);
+        if (ClearColour != Color.Transparent)
+        {
+            GraphicsDevice.Clear(ClearColour);
+        }
 
-        _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+        _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
         _sm.Draw(_spriteBatch);
         _spriteBatch.End();
+
+        base.Draw(gt);
+
     }
 }

@@ -20,6 +20,7 @@ public class Ball
     private Vector2 _shift;
     private int _size;
     private float _speed = 350f;
+    private float _speedIncrease = 35f;
     private BallState _state = BallState.Stop;
     protected SoundEffect _wallHitFx;
     protected SoundEffect _paddleHitFx;
@@ -52,6 +53,7 @@ public class Ball
             case BallState.BouncePaddle:
             {
                 _sprite.Position -= _shift;
+                _sprite.AdjustSpeed(_speedIncrease);
                 _sprite.ReverseXDirection();
                 _paddleHitFx.Play();
                 _state = BallState.Move;

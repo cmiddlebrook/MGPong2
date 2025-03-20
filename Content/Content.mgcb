@@ -89,6 +89,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Title.spritefont
 
+#begin Fonts/Win.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Win.spritefont
+
 #begin Music/IcecapMountains.ogg
 /importer:OggImporter
 /processor:SongProcessor

@@ -4,12 +4,10 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using System;
-using System.Diagnostics;
 
 namespace MGPong2;
 
-public class PlayScene : GameState
+public class PlayScene : GameScene
 {
     private enum GameState
     {
@@ -36,7 +34,7 @@ public class PlayScene : GameState
     public int WindowWidth => _playArea.Width;
     public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
-    public PlayScene(StateManager sm, AssetManager am, InputHelper ih) 
+    public PlayScene(SceneManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
     {
         _name = "play";
@@ -49,7 +47,8 @@ public class PlayScene : GameState
         _loseFx = _am.LoadSoundFx("LosePoint");
         _powerUpFx = _am.LoadSoundFx("PowerUp");
         _playMusic = _am.LoadMusic("IcecapMountains");
-        _winText = new TextObject(_am.LoadFont("Title"));
+        _winText = new TextObject(_am.LoadFont("Win"));
+        _winText.Colour = new Color(199, 120, 255);
 
         _board = _am.LoadTexture("Board3");
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
@@ -69,6 +68,7 @@ public class PlayScene : GameState
     {
         switch (_state)
         {
+            case GameState.NewGame:
             case GameState.NewBall:
             {
                 if (_ih.KeyPressed(Keys.Space))
@@ -91,7 +91,7 @@ public class PlayScene : GameState
                 {
                     _state = GameState.Paused;
                 }
-                    break;
+                break;
             }
             case GameState.Win:
                 if (_ih.KeyPressed(Keys.Space))
@@ -135,7 +135,6 @@ public class PlayScene : GameState
                     _playerPaddle.NewBall();
                     _aiPaddle.NewBall();
                     _ball.NewBall();
-                    _state = GameState.InPlay;
                     break;
                 }
             case GameState.InPlay:
@@ -222,7 +221,7 @@ public class PlayScene : GameState
         {
             _aiPaddle.Score++;
             _loseFx.Play();
-            if (_aiPaddle.Score >= 3)
+            if (_aiPaddle.Score >= 1)
             {
                 _winText.Text = "You Lose!";
                 _state = GameState.Win;
