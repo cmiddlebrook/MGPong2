@@ -17,7 +17,7 @@ public class Ball
 
     private SpriteObject _sprite;
     private Rectangle _playArea;
-    private Vector2 _velocity;
+    private Vector2 _shift;
     private int _size;
     private float _speed = 350f;
     private BallState _state = BallState.Stop;
@@ -51,6 +51,7 @@ public class Ball
         {
             case BallState.BouncePaddle:
             {
+                _sprite.Position -= _shift;
                 _sprite.ReverseXDirection();
                 _paddleHitFx.Play();
                 _state = BallState.Move;
@@ -85,8 +86,10 @@ public class Ball
         _sprite.Velocity = GetStartVelocity();
     }
 
-    public void BouncePaddle()
+    public void BouncePaddle(Vector2 shift)
     {
+        _shift = shift;
+        _shift.Y = 0;
         _state = BallState.BouncePaddle;
     }
 
@@ -98,9 +101,9 @@ public class Ball
     }
     protected Vector2 GetStartVelocity()
     {
-        //Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
-        //randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
-        Vector2 randomVelocity = new Vector2(100f, 5f);
+        Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
+        randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
+        //Vector2 randomVelocity = new Vector2(100f, 5f);
         randomVelocity.Normalize();
         randomVelocity *= _speed;
         //randomVelocity *= 100f;

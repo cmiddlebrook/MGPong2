@@ -65,7 +65,8 @@ public class PlayState : GameState
     public override void Update(GameTime gt)
     {
         base.Update(gt);
-        HandleCollisions();
+        HandleBallPlayerCollision();
+        HandleBallAICollision();
         _playerPaddle.Update(gt);
         _aiPaddle.Update(gt);
         _ball.Update(gt);
@@ -88,16 +89,35 @@ public class PlayState : GameState
         _ball.Reset();
     }
 
-    private void HandleCollisions()
+    private void HandleBallPlayerCollision()
     {
-        Rectangle ballRect = _ball.Bounds;
-        if (ballRect.Intersects(_playerPaddle.Bounds))
+        var (colliding, shift) = IsCollision(_ball.Bounds, _playerPaddle.Bounds);
+        if (colliding)
         {
-            _ball.BouncePaddle();
+            _ball.BouncePaddle(shift);
         }
-        else if (ballRect.Intersects(_aiPaddle.Bounds))
+    }
+
+    private void HandleBallAICollision()
+    {
+        var (colliding, shift) = IsCollision(_ball.Bounds, _aiPaddle.Bounds);
+        if (colliding)
         {
-            _ball.BouncePaddle();
+            _ball.BouncePaddle(shift);
         }
+    }
+
+    private (bool colliding, Vector2 shift) IsCollision(Rectangle a, Rectangle b)
+    {
+        bool colliding = false;
+        Vector2 shift = Vector2.Zero;
+        if (a.Intersects(b))
+        {
+            colliding = true;
+            shift.X = (a.Center.X < b.Center.X) ? a.Right - b.Left : a.Left - b.Right;
+            shift.Y = (a.Center.Y < b.Center.Y) ? a.Bottom - b.Top : a.Top - b.Bottom;
+        }
+
+        return (colliding, shift);
     }
 }
