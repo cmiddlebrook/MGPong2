@@ -14,6 +14,7 @@ public class PlayState : GameState
     private ScoreBar _scoreBar;
     private PlayerPaddle _playerPaddle;
     private AIPaddle _aiPaddle;
+    private Ball _ball;
     public int WindowWidth => _playArea.Width;
     public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
@@ -31,6 +32,7 @@ public class PlayState : GameState
         _playArea = new Rectangle(0, _scoreBar.Height, _board.Width, _board.Height);
         _playerPaddle = new PlayerPaddle(_playArea, _am.LoadTexture("LeftPaddle"));
         _aiPaddle = new AIPaddle(_playArea, _am.LoadTexture("RightPaddle"));
+        _ball = new Ball(_playArea, _am.LoadTexture("WhiteBall"), _am.LoadSoundFx("WallHit"), _am.LoadSoundFx("PaddleHit"));
     }
 
     public override void Enter()
@@ -61,8 +63,10 @@ public class PlayState : GameState
     public override void Update(GameTime gt)
     {
         base.Update(gt);
+        HandleCollisions();
         _playerPaddle.Update(gt);
         _aiPaddle.Update(gt);
+        _ball.Update(gt);
         HandleInput(gt);
     }
 
@@ -72,10 +76,22 @@ public class PlayState : GameState
         sb.Draw(_board, _playArea, Color.White);
         _playerPaddle.Draw(sb);
         _aiPaddle.Draw(sb);
+        _ball.Draw(sb);
     }
 
     private void StartNewGame()
     {
         _playerPaddle.Reset();
+        _aiPaddle.Reset();
+        _ball.Reset();
+    }
+
+    private void HandleCollisions()
+    {
+        Rectangle ballRect = _ball.Bounds;
+        if (ballRect.Intersects(_playerPaddle.Bounds))
+        {
+            _ball.BouncePaddle();
+        }
     }
 }

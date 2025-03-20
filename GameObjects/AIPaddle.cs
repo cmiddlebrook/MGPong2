@@ -18,14 +18,24 @@ public class AIPaddle
     public AIPaddle(Rectangle playArea, Texture2D texture)
     {
         _playArea = playArea;
-        int startY = (playArea.Height - (texture.Height / 2)) / 2;
+        int startY = playArea.Top + ((playArea.Height - texture.Height) / 2);
         _startPosition = new Vector2(playArea.Width - texture.Width - 4, startY);
         _sprite = new SpriteObject(texture, _startPosition, Vector2.Zero, Vector2.One);
     }
 
     public void Update(GameTime gt)
     {
+        //Point ballPos = ballBounds.Center;
+        //Point paddlePos = _paddle.Bounds.Center;
 
+        //if (ballPos.Y < paddlePos.Y)
+        //{
+        //    _paddle.MoveUp(gt, Speed);
+        //}
+        //else if (ballPos.Y > paddlePos.Y)
+        //{
+        //    _paddle.MoveDown(gt, Speed);
+        //}
     }
 
     public void Draw(SpriteBatch sb)
