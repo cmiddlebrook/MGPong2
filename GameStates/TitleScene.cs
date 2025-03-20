@@ -8,14 +8,14 @@ using System.Diagnostics;
 
 namespace MGPong2;
 
-public class TitleState : GameState
+public class TitleScene : GameState
 {
     private TextObject _titleText;
     private TextObject _instructions;
     private string _instructionsText;
     private Song _titleMusic;
 
-    public TitleState(StateManager sm, AssetManager am, InputHelper ih) 
+    public TitleScene(StateManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
     {
         _name = "title";
@@ -39,8 +39,8 @@ public class TitleState : GameState
 
     public override void Enter()
     {
-        MediaPlayer.Volume = 0.3f;
-        MediaPlayer.Play(_titleMusic);
+        MediaPlayer.Volume = 0.2f;
+        //MediaPlayer.Play(_titleMusic);
     }
 
     public override void HandleInput(GameTime gt)

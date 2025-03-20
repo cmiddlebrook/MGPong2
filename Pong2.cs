@@ -27,11 +27,11 @@ public class Pong2 : Calimoe
     {
         base.LoadContent(); // ensure the AssetManager gets loaded
 
-        var playState = new PlayState(_sm, _am, _ih);
+        var playState = new PlayScene(_sm, _am, _ih);
 
         _sm.AddState(playState);
-        _sm.AddState(new TitleState(_sm, _am, _ih));
-        _sm.AddState(new WinState(_sm, _am, _ih));
+        _sm.AddState(new TitleScene(_sm, _am, _ih));
+        _sm.AddState(new WinScene(_sm, _am, _ih));
         _sm.SwitchState("title");
 
         _graphics.PreferredBackBufferWidth = playState.WindowWidth;

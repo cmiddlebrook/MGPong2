@@ -86,6 +86,11 @@ public class Ball
         _sprite.Velocity = GetStartVelocity();
     }
 
+    public void NewBall()
+    {
+        Reset();
+    }
+
     public void BouncePaddle(Vector2 shift)
     {
         _shift = shift;

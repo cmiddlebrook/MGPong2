@@ -1,35 +1,53 @@
 ﻿using CALIMOE;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Diagnostics;
 
 namespace MGPong2;
 
-public class PlayState : GameState
+public class PlayScene : GameState
 {
-    
+    private enum GameState
+    {
+        NewGame,
+        NewBall,
+        InPlay,
+        Paused,
+    }
+
     private Rectangle _playArea;
     private Texture2D _board;
+    private SoundEffect _winFx;
+    private SoundEffect _loseFx;
+    private SoundEffect _powerUpFx;
+    private Song _playMusic;
+
+    private GameState _state = GameState.NewGame;
     private ScoreBar _scoreBar;
     private PlayerPaddle _playerPaddle;
     private AIPaddle _aiPaddle;
     private Ball _ball;
-    private PongData _data;
     public int WindowWidth => _playArea.Width;
     public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
-    public PlayState(StateManager sm, AssetManager am, InputHelper ih) 
+    public PlayScene(StateManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
     {
         _name = "play";
         _clearColour = new Color(0x10, 0x10, 0x10);
-        _data = new PongData(this);
     }
 
     public override void LoadContent()
     {
+        _winFx = _am.LoadSoundFx("WinPoint");
+        _loseFx = _am.LoadSoundFx("LosePoint");
+        _powerUpFx = _am.LoadSoundFx("PowerUp");
+        _playMusic = _am.LoadMusic("IcecapMountains");
+
         _board = _am.LoadTexture("Board3");
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
         _playArea = new Rectangle(0, _scoreBar.Height, _board.Width, _board.Height);
@@ -40,7 +58,9 @@ public class PlayState : GameState
 
     public override void Enter()
     {
-        StartNewGame();
+        MediaPlayer.Volume = 0.2f;
+        //MediaPlayer.Play(_playMusic);
+        _state = GameState.NewGame;
     }
     public override void HandleInput(GameTime gt)
     {
@@ -65,37 +85,63 @@ public class PlayState : GameState
 
     public override void Update(GameTime gt)
     {
-        base.Update(gt);
-        if (HandleBallPaddleCollisions(_playerPaddle))
+        switch (_state)
         {
-            _aiPaddle.StartTrackingTimer();
-        }
-        else
-        {
-            HandleBallPaddleCollisions(_aiPaddle);
-            _aiPaddle.TrackBall(_ball.Bounds);
-            _aiPaddle.Update(gt);
-        }
+            case GameState.NewGame:
+                {
+                    _playerPaddle.Reset();
+                    _aiPaddle.Reset();
+                    _ball.Reset();
+                    _state = GameState.NewBall;
+                    break;
+                }
+            case GameState.NewBall:
+                {
+                    _playerPaddle.NewBall();
+                    _aiPaddle.NewBall();
+                    _ball.NewBall();
+                    _state = GameState.InPlay;
+                    break;
+                }
+            case GameState.InPlay:
+                {
+                    if (HandleBallPaddleCollisions(_playerPaddle))
+                    {
+                        _aiPaddle.StartTrackingTimer();
+                    }
+                    else
+                    {
+                        HandleBallPaddleCollisions(_aiPaddle);
+                        _aiPaddle.TrackBall(_ball.Bounds);
+                        _aiPaddle.Update(gt);
+                    }
 
-        _playerPaddle.Update(gt);
-        _ball.Update(gt);
+                    CheckPointScored();
+
+                    _playerPaddle.Update(gt);
+                    _ball.Update(gt);
+                    break;
+                }
+            case GameState.Paused:
+                {
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+        base.Update(gt);
         HandleInput(gt);
     }
 
     public override void Draw(SpriteBatch sb)
     {
-        _scoreBar.Draw(sb, 0, 0);
+        _scoreBar.Draw(sb, _playerPaddle.Score, _aiPaddle.Score);
         sb.Draw(_board, _playArea, Color.White);
         _playerPaddle.Draw(sb);
         _aiPaddle.Draw(sb);
         _ball.Draw(sb);
-    }
-
-    private void StartNewGame()
-    {
-        _playerPaddle.Reset();
-        _aiPaddle.Reset();
-        _ball.Reset();
     }
 
 
@@ -122,5 +168,22 @@ public class PlayState : GameState
         }
 
         return (colliding, shift);
+    }
+
+    protected void CheckPointScored()
+    {
+        Rectangle ballRect = _ball.Bounds;
+        if (ballRect.X < 0)
+        {
+            _aiPaddle.Score++;
+            _loseFx.Play();
+            _state = GameState.NewBall;
+        }
+        else if (ballRect.X + ballRect.Width > _playArea.Width)
+        {
+            _playerPaddle.Score++;
+            _winFx.Play();
+            _state = GameState.NewBall;
+        }
     }
 }

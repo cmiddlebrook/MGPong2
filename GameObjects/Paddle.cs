@@ -20,6 +20,8 @@ public abstract class Paddle
     
     protected abstract float Speed { get; set; }
 
+    public int Score { get; set; }
+
     public Rectangle Bounds => _sprite.Bounds;
 
     public float CenterY => _sprite.Center.Y;
@@ -68,6 +70,12 @@ public abstract class Paddle
     public virtual void Reset()
     {
         _sprite.Reset();
+        _state = PaddleState.Stopped;
+    }
+
+    public virtual void NewBall()
+    {
+        Reset();
     }
 
     public virtual void MoveUp()

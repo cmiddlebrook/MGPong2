@@ -7,7 +7,7 @@ using System;
 namespace MGPong2;
 public class AIPaddle : Paddle
 {
-    protected override float Speed { get; set; } = 200f;
+    protected override float Speed { get; set; } = 10f;
 
     private float _trackingDelay = 0.7f;
     private TimeSpan _trackingTimer;

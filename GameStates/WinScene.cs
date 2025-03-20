@@ -7,11 +7,11 @@ using System.Diagnostics;
 
 namespace MGPong2;
 
-public class WinState : GameState
+public class WinScene : GameState
 {
     private TextObject _winText;
 
-    public WinState(StateManager sm, AssetManager am, InputHelper ih) 
+    public WinScene(StateManager sm, AssetManager am, InputHelper ih) 
         : base(sm, am, ih)
     {
         _name = "win";
