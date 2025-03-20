@@ -69,13 +69,14 @@ public abstract class Paddle
 
     public virtual void Reset()
     {
-        _sprite.Reset();
-        _state = PaddleState.Stopped;
+        Score = 0;
+        NewBall();
     }
 
     public virtual void NewBall()
     {
-        Reset();
+        _sprite.Reset();
+        _state = PaddleState.Stopped;
     }
 
     public virtual void MoveUp()

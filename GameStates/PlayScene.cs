@@ -17,6 +17,7 @@ public class PlayScene : GameState
         NewBall,
         InPlay,
         Paused,
+        Win,
     }
 
     private Rectangle _playArea;
@@ -25,6 +26,7 @@ public class PlayScene : GameState
     private SoundEffect _loseFx;
     private SoundEffect _powerUpFx;
     private Song _playMusic;
+    private TextObject _winText;
 
     private GameState _state = GameState.NewGame;
     private ScoreBar _scoreBar;
@@ -47,6 +49,7 @@ public class PlayScene : GameState
         _loseFx = _am.LoadSoundFx("LosePoint");
         _powerUpFx = _am.LoadSoundFx("PowerUp");
         _playMusic = _am.LoadMusic("IcecapMountains");
+        _winText = new TextObject(_am.LoadFont("Title"));
 
         _board = _am.LoadTexture("Board3");
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
@@ -64,23 +67,55 @@ public class PlayScene : GameState
     }
     public override void HandleInput(GameTime gt)
     {
+        switch (_state)
+        {
+            case GameState.NewBall:
+            {
+                if (_ih.KeyPressed(Keys.Space))
+                {
+                    _state = GameState.InPlay;
+                }
+                break;
+            }
+            case GameState.InPlay:
+            {
+                if (_ih.KeyDown(Keys.W))
+                {
+                    _playerPaddle.MoveUp();
+                }
+                else if (_ih.KeyDown(Keys.S))
+                {
+                    _playerPaddle.MoveDown();
+                }
+                else if (_ih.KeyPressed(Keys.P))
+                {
+                    _state = GameState.Paused;
+                }
+                    break;
+            }
+            case GameState.Win:
+                if (_ih.KeyPressed(Keys.Space))
+                {
+                    _state = GameState.NewGame;
+                }
+                break;
+            case GameState.Paused:
+                if (_ih.KeyPressed(Keys.P))
+                {
+                    _state = GameState.InPlay;
+                }
+                break;
+            default:
+                {
+                    break;
+                }
+        }
+
         if (_ih.KeyPressed(Keys.Escape))
         {
-            Debug.WriteLine("PlayState HandleInput: ESCAPE");
             _sm.SwitchState("title");
         }
-        else if (_ih.KeyPressed(Keys.Divide))
-        {
-            _sm.SwitchState("win");
-        }
-        else if (_ih.KeyDown(Keys.W))
-        {
-            _playerPaddle.MoveUp();
-        }
-        else if (_ih.KeyDown(Keys.S))
-        {
-            _playerPaddle.MoveDown();
-        }
+
     }
 
     public override void Update(GameTime gt)
@@ -122,6 +157,11 @@ public class PlayScene : GameState
                     _ball.Update(gt);
                     break;
                 }
+
+            case GameState.Win:
+                {
+                    break;
+                }
             case GameState.Paused:
                 {
                     break;
@@ -142,6 +182,11 @@ public class PlayScene : GameState
         _playerPaddle.Draw(sb);
         _aiPaddle.Draw(sb);
         _ball.Draw(sb);
+
+        if (_state == GameState.Win)
+        {
+            _winText.DrawText(sb, _winText.Text, TextObject.CenterText.Both, 30);
+        }
     }
 
 
@@ -177,13 +222,30 @@ public class PlayScene : GameState
         {
             _aiPaddle.Score++;
             _loseFx.Play();
-            _state = GameState.NewBall;
+            if (_aiPaddle.Score >= 3)
+            {
+                _winText.Text = "You Lose!";
+                _state = GameState.Win;
+            }
+            else
+            {
+                _state = GameState.NewBall;
+            }
         }
         else if (ballRect.X + ballRect.Width > _playArea.Width)
         {
             _playerPaddle.Score++;
             _winFx.Play();
-            _state = GameState.NewBall;
+            if (_playerPaddle.Score >= 3)
+            {
+                _winText.Text = "You Win!";
+                _state = GameState.Win;
+            }
+            else
+            {
+                _state = GameState.NewBall;
+            }
         }
+
     }
 }
