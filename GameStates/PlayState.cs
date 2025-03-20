@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Diagnostics;
 
 namespace MGPong2;
@@ -12,6 +13,7 @@ public class PlayState : GameState
     private Texture2D _board;
     private ScoreBar _scoreBar;
     private PlayerPaddle _playerPaddle;
+    private AIPaddle _aiPaddle;
     public int WindowWidth => _playArea.Width;
     public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
@@ -28,6 +30,7 @@ public class PlayState : GameState
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
         _playArea = new Rectangle(0, _scoreBar.Height, _board.Width, _board.Height);
         _playerPaddle = new PlayerPaddle(_playArea, _am.LoadTexture("LeftPaddle"));
+        _aiPaddle = new AIPaddle(_playArea, _am.LoadTexture("RightPaddle"));
     }
 
     public override void Enter()
@@ -45,9 +48,13 @@ public class PlayState : GameState
         {
             _sm.SwitchState("win");
         }
-        else
+        else if (_ih.KeyDown(Keys.W))
         {
-            _playerPaddle.HandleInput(_ih, gt);
+            _playerPaddle.MoveUp();
+        }
+        else if (_ih.KeyDown(Keys.S))
+        {
+            _playerPaddle.MoveDown();
         }
     }
 
@@ -55,6 +62,7 @@ public class PlayState : GameState
     {
         base.Update(gt);
         _playerPaddle.Update(gt);
+        _aiPaddle.Update(gt);
         HandleInput(gt);
     }
 
@@ -63,6 +71,7 @@ public class PlayState : GameState
         _scoreBar.Draw(sb, 0, 0);
         sb.Draw(_board, _playArea, Color.White);
         _playerPaddle.Draw(sb);
+        _aiPaddle.Draw(sb);
     }
 
     private void StartNewGame()
