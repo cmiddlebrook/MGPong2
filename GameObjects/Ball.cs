@@ -17,7 +17,6 @@ public class Ball
 
     private SpriteObject _sprite;
     private Rectangle _playArea;
-    private Vector2 _startPosition;
     private Vector2 _velocity;
     private int _size;
     private float _speed = 350f;
@@ -35,11 +34,8 @@ public class Ball
     public Ball(Rectangle playArea, Texture2D texture, SoundEffect wallHit, SoundEffect paddleHit)
     {
         _playArea = playArea;
-        int startX = (playArea.Width - (texture.Width)) / 2;
-        int startY = playArea.Top + ((playArea.Height - texture.Height) / 2);
-        _startPosition = new Vector2(startX, startY);
         _size = texture.Width;
-        _sprite = new SpriteObject(texture, _startPosition, GetStartVelocity(), Vector2.One);
+        _sprite = new SpriteObject(texture, GetStartPosition(), GetStartVelocity(), Vector2.One);
         _wallHitFx = wallHit;
         _paddleHitFx = paddleHit;
     }
@@ -85,6 +81,7 @@ public class Ball
     {
         _state = BallState.Move;
         _sprite.Reset();
+        _sprite.Position = GetStartPosition();
         _sprite.Velocity = GetStartVelocity();
     }
 
@@ -93,12 +90,20 @@ public class Ball
         _state = BallState.BouncePaddle;
     }
 
+    protected Vector2 GetStartPosition()
+    {
+        int startX = (_playArea.Width - _size) / 2;
+        int startY = _playArea.Top + ((_playArea.Height - _size) / 2);
+        return new Vector2(startX, startY);
+    }
     protected Vector2 GetStartVelocity()
     {
-        Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
-        randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
+        //Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
+        //randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
+        Vector2 randomVelocity = new Vector2(100f, 5f);
         randomVelocity.Normalize();
         randomVelocity *= _speed;
+        //randomVelocity *= 100f;
 
         return randomVelocity;
     }

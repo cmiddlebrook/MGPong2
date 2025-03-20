@@ -15,6 +15,7 @@ public class PlayState : GameState
     private PlayerPaddle _playerPaddle;
     private AIPaddle _aiPaddle;
     private Ball _ball;
+    private PongData _data;
     public int WindowWidth => _playArea.Width;
     public int WindowHeight => _playArea.Height + _scoreBar.Height;
 
@@ -23,6 +24,7 @@ public class PlayState : GameState
     {
         _name = "play";
         _clearColour = new Color(0x10, 0x10, 0x10);
+        _data = new PongData(this);
     }
 
     public override void LoadContent()
@@ -90,6 +92,10 @@ public class PlayState : GameState
     {
         Rectangle ballRect = _ball.Bounds;
         if (ballRect.Intersects(_playerPaddle.Bounds))
+        {
+            _ball.BouncePaddle();
+        }
+        else if (ballRect.Intersects(_aiPaddle.Bounds))
         {
             _ball.BouncePaddle();
         }
