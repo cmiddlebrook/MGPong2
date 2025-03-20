@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace MGPong2;
-public class Paddle
+public abstract class Paddle
 {
     protected enum PaddleState
     {
@@ -17,8 +17,8 @@ public class Paddle
     protected SpriteObject _sprite;
     protected Rectangle _playArea;
     protected Vector2 _startPosition;
-    protected float _speed = 250f;
-
+    
+    protected abstract float Speed { get; set; }
 
     public Rectangle Bounds => _sprite.Bounds;
 
@@ -38,7 +38,7 @@ public class Paddle
         {
             case PaddleState.MovingUp:
                 {
-                    float newY = (float)(_sprite.Position.Y - _speed * gt.ElapsedGameTime.TotalSeconds);
+                    float newY = (float)(_sprite.Position.Y - Speed * gt.ElapsedGameTime.TotalSeconds);
                     _sprite.Position = new Vector2(_sprite.Position.X, Math.Max(newY, _playArea.Top));
                     _state = PaddleState.Stopped;
                     break;
@@ -46,7 +46,7 @@ public class Paddle
 
             case PaddleState.MovingDown:
                 {
-                    float newY = (float)(_sprite.Position.Y + _speed * gt.ElapsedGameTime.TotalSeconds);
+                    float newY = (float)(_sprite.Position.Y + Speed * gt.ElapsedGameTime.TotalSeconds);
                     _sprite.Position = new Vector2(_sprite.Position.X, Math.Min(newY, _playArea.Bottom - _sprite.Bounds.Height));
                     _state = PaddleState.Stopped;
                     break;
@@ -60,22 +60,22 @@ public class Paddle
         }
     }
 
-    public void Draw(SpriteBatch sb)
+    public virtual void Draw(SpriteBatch sb)
     {
         _sprite.Draw(sb);
     }
 
-    public void Reset()
+    public virtual void Reset()
     {
         _sprite.Reset();
     }
 
-    public void MoveUp()
+    public virtual void MoveUp()
     {
         _state = PaddleState.MovingUp;
     }
 
-    public void MoveDown()
+    public virtual void MoveDown()
     {
         _state = PaddleState.MovingDown;
     }

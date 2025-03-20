@@ -9,6 +9,7 @@ namespace MGPong2;
 
 public class PlayState : GameState
 {
+    
     private Rectangle _playArea;
     private Texture2D _board;
     private ScoreBar _scoreBar;
@@ -65,12 +66,19 @@ public class PlayState : GameState
     public override void Update(GameTime gt)
     {
         base.Update(gt);
-        HandleBallPlayerCollision();
-        HandleBallAICollision();
+        if (HandleBallPaddleCollisions(_playerPaddle))
+        {
+            _aiPaddle.StartTrackingTimer();
+        }
+        else
+        {
+            HandleBallPaddleCollisions(_aiPaddle);
+            _aiPaddle.TrackBall(_ball.Bounds);
+            _aiPaddle.Update(gt);
+        }
+
         _playerPaddle.Update(gt);
         _ball.Update(gt);
-        _aiPaddle.TrackBall(_ball.Bounds);
-        _aiPaddle.Update(gt);
         HandleInput(gt);
     }
 
@@ -90,22 +98,16 @@ public class PlayState : GameState
         _ball.Reset();
     }
 
-    private void HandleBallPlayerCollision()
-    {
-        var (colliding, shift) = IsCollision(_ball.Bounds, _playerPaddle.Bounds);
-        if (colliding)
-        {
-            _ball.BouncePaddle(shift);
-        }
-    }
 
-    private void HandleBallAICollision()
+    private bool HandleBallPaddleCollisions(Paddle paddle)
     {
-        var (colliding, shift) = IsCollision(_ball.Bounds, _aiPaddle.Bounds);
+        var (colliding, shift) = IsCollision(_ball.Bounds, paddle.Bounds);
         if (colliding)
         {
             _ball.BouncePaddle(shift);
+            return true;
         }
+        return false;
     }
 
     private (bool colliding, Vector2 shift) IsCollision(Rectangle a, Rectangle b)

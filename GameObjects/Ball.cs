@@ -103,7 +103,7 @@ public class Ball
     {
         Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
         randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
-        //Vector2 randomVelocity = new Vector2(100f, 5f);
+        //Vector2 randomVelocity = new Vector2(100f, 3f);
         randomVelocity.Normalize();
         randomVelocity *= _speed;
         //randomVelocity *= 100f;
