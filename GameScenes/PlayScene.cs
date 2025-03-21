@@ -13,6 +13,7 @@ public class PlayScene : GameScene
     {
         NewGame,
         NewBall,
+        Serve,
         InPlay,
         Paused,
         Win,
@@ -69,11 +70,11 @@ public class PlayScene : GameScene
         switch (_state)
         {
             case GameState.NewGame:
-            case GameState.NewBall:
+            case GameState.Serve:
             {
                 if (_ih.KeyPressed(Keys.Space))
                 {
-                    _state = GameState.InPlay;
+                    _state = GameState.NewBall;
                 }
                 break;
             }
@@ -127,7 +128,7 @@ public class PlayScene : GameScene
                     _playerPaddle.Reset();
                     _aiPaddle.Reset();
                     _ball.Reset();
-                    _state = GameState.NewBall;
+                    _state = GameState.Serve;
                     break;
                 }
             case GameState.NewBall:
@@ -135,6 +136,7 @@ public class PlayScene : GameScene
                     _playerPaddle.NewBall();
                     _aiPaddle.NewBall();
                     _ball.NewBall();
+                    _state = GameState.InPlay;
                     break;
                 }
             case GameState.InPlay:
@@ -157,18 +159,11 @@ public class PlayScene : GameScene
                     break;
                 }
 
+            case GameState.Serve:
             case GameState.Win:
-                {
-                    break;
-                }
             case GameState.Paused:
-                {
-                    break;
-                }
             default:
-                {
-                    break;
-                }
+                break;
         }
         base.Update(gt);
         HandleInput(gt);
@@ -221,7 +216,7 @@ public class PlayScene : GameScene
         {
             _aiPaddle.Score++;
             _loseFx.Play();
-            if (_aiPaddle.Score >= 1)
+            if (_aiPaddle.Score >= 5)
             {
                 _winText.Text = "You Lose!";
                 _state = GameState.Win;
@@ -235,7 +230,7 @@ public class PlayScene : GameScene
         {
             _playerPaddle.Score++;
             _winFx.Play();
-            if (_playerPaddle.Score >= 3)
+            if (_playerPaddle.Score >= 5)
             {
                 _winText.Text = "You Win!";
                 _state = GameState.Win;

@@ -52,7 +52,8 @@ public class Ball
         {
             case BallState.BouncePaddle:
             {
-                _sprite.Position -= _shift;
+                Vector2 adjustedShift = _shift * Math.Abs(_sprite.Velocity.X) * (float)gt.ElapsedGameTime.TotalSeconds;
+                _sprite.Position -= adjustedShift;
                 _sprite.AdjustSpeed(_speedIncrease);
                 _sprite.ReverseXDirection();
                 _paddleHitFx.Play();

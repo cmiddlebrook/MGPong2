@@ -8,8 +8,9 @@ namespace MGPong2;
 public class AIPaddle : Paddle
 {
     protected override float Speed { get; set; } = 150f;
+    private float _speedIncrease = 30f;
 
-    private float _trackingDelay = 0.7f;
+    private float _trackingDelay = 0.8f;
     private TimeSpan _trackingTimer;
     public AIPaddle(Rectangle playArea, Texture2D texture)
         : base(playArea, texture)
@@ -30,6 +31,13 @@ public class AIPaddle : Paddle
     {
         base.Reset();
         _trackingTimer = TimeSpan.Zero;
+    }
+
+    public override void NewBall()
+    {
+        base.NewBall();
+        _trackingDelay = _trackingDelay > 0f ? _trackingDelay - 0.1f : 0f;
+        Speed += _speedIncrease;
     }
 
     public void TrackBall(Rectangle ballBounds)
