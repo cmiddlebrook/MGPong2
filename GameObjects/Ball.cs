@@ -19,8 +19,8 @@ public class Ball
     private Rectangle _playArea;
     private Vector2 _shift;
     private int _size;
-    private float _speed = 350f;
-    private float _speedIncrease = 35f;
+    private float _speed = 400f;
+    private float _speedIncrease = 40f;
     private BallState _state = BallState.Stop;
     protected SoundEffect _wallHitFx;
     protected SoundEffect _paddleHitFx;
@@ -36,7 +36,7 @@ public class Ball
     {
         _playArea = playArea;
         _size = texture.Width;
-        _sprite = new SpriteObject(texture, GetStartPosition(), GetStartVelocity(), Vector2.One);
+        _sprite = new SpriteObject(texture, GetStartPosition(), GetStartVelocity(), 1.0f);
         _wallHitFx = wallHit;
         _paddleHitFx = paddleHit;
     }
@@ -109,7 +109,7 @@ public class Ball
     }
     protected Vector2 GetStartVelocity()
     {
-        Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(5, 60)));
+        Vector2 randomVelocity = new Vector2(_rand.Next(2) == 0 ? -100f : 100f, (_rand.Next(10, 60)));
         randomVelocity.Y *= _rand.Next(2) == 0 ? 1 : -1;
         //Vector2 randomVelocity = new Vector2(100f, 3f);
         randomVelocity.Normalize();

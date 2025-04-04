@@ -50,6 +50,8 @@ public class PlayScene : GameScene
         _playMusic = _am.LoadMusic("IcecapMountains");
         _winText = new TextObject(_am.LoadFont("Win"));
         _winText.Colour = new Color(199, 120, 255);
+        _winText.Viewport = _playArea;
+        _winText.CenterBoth();
 
         _board = _am.LoadTexture("Board3");
         _scoreBar = new ScoreBar(_am.LoadTexture("ScoreBar"), _am.LoadFont("Score"), _board.Width);
@@ -62,7 +64,7 @@ public class PlayScene : GameScene
     public override void Enter()
     {
         MediaPlayer.Volume = 0.2f;
-        //MediaPlayer.Play(_playMusic);
+        MediaPlayer.Play(_playMusic);
         _state = GameState.NewGame;
     }
     public override void HandleInput(GameTime gt)
@@ -114,7 +116,7 @@ public class PlayScene : GameScene
 
         if (_ih.KeyPressed(Keys.Escape))
         {
-            _sm.SwitchState("title");
+            _sm.SwitchScene("title");
         }
 
     }
@@ -165,6 +167,9 @@ public class PlayScene : GameScene
             default:
                 break;
         }
+
+        _winText.Update(gt);
+
         base.Update(gt);
         HandleInput(gt);
     }
@@ -179,7 +184,7 @@ public class PlayScene : GameScene
 
         if (_state == GameState.Win)
         {
-            _winText.DrawText(sb, _winText.Text, TextObject.CenterText.Both, 30);
+            _winText.Draw(sb);
         }
     }
 
@@ -215,8 +220,9 @@ public class PlayScene : GameScene
         if (ballRect.X < 0)
         {
             _aiPaddle.Score++;
+            _scoreBar.RightScore = _aiPaddle.Score;
             _loseFx.Play();
-            if (_aiPaddle.Score >= 5)
+            if (_aiPaddle.Score >= 3)
             {
                 _winText.Text = "You Lose!";
                 _state = GameState.Win;
@@ -229,8 +235,9 @@ public class PlayScene : GameScene
         else if (ballRect.X + ballRect.Width > _playArea.Width)
         {
             _playerPaddle.Score++;
+            _scoreBar.LeftScore = _playerPaddle.Score;
             _winFx.Play();
-            if (_playerPaddle.Score >= 5)
+            if (_playerPaddle.Score >= 3)
             {
                 _winText.Text = "You Win!";
                 _state = GameState.Win;

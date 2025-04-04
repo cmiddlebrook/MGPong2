@@ -8,7 +8,7 @@ namespace MGPong2;
 public class AIPaddle : Paddle
 {
     protected override float Speed { get; set; } = 150f;
-    private float _speedIncrease = 30f;
+    private float _speedIncrease = 20f;
 
     private float _trackingDelay = 0.8f;
     private TimeSpan _trackingTimer;
@@ -18,7 +18,7 @@ public class AIPaddle : Paddle
         _playArea = playArea;
         int startY = playArea.Top + ((playArea.Height - texture.Height) / 2);
         _startPosition = new Vector2(playArea.Width - texture.Width - 4, startY);
-        _sprite = new SpriteObject(texture, _startPosition, Vector2.Zero, Vector2.One);
+        _sprite = new SpriteObject(texture, _startPosition, Vector2.Zero, 1.0f);
     }
 
     public override void Update(GameTime gt)

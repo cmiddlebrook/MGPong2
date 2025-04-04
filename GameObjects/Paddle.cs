@@ -31,7 +31,7 @@ public abstract class Paddle
         _playArea = playArea;
         int startY = playArea.Top + ((playArea.Height - texture.Height) / 2);
         _startPosition = new Vector2(4, startY);
-        _sprite = new SpriteObject(texture, _startPosition, Vector2.Zero, Vector2.One);
+        _sprite = new SpriteObject(texture, _startPosition, Vector2.Zero, 1.0f);
     }
 
     public virtual void Update(GameTime gt)
